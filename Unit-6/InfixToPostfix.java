@@ -10,7 +10,7 @@ public class InfixToPostfix {
         sc.close();
     }
 
-    private static String convertInfixToPostfix(String s) {
+    static String convertInfixToPostfix(String s) {
         String postfix = "";
         Stack<Character> stack = new Stack<Character>();
         stack.push('(');
@@ -34,10 +34,15 @@ public class InfixToPostfix {
                 }
             } else if (isOperator(i)) {
                 rank--;
-                while (!stack.empty() && getPrecedence(i) <= getPrecedence(stack.peek())) {
-                    postfix += stack.pop() + " ";
+                if (i == '^' || i == '$') {
+                    stack.push(i);
+                } else {
+
+                    while (!stack.empty() && getPrecedence(i) <= getPrecedence(stack.peek())) {
+                        postfix += stack.pop() + " ";
+                    }
+                    stack.push(i);
                 }
-                stack.push(i);
             }
         }
 
@@ -47,22 +52,22 @@ public class InfixToPostfix {
         return postfix;
     }
 
-    private static int getPrecedence(char ch) {
+    static int getPrecedence(char ch) {
         switch (ch) {
             case '+':
             case '-':
                 return 1;
             case '*':
             case '/':
-                return 2;
+                return 3;
             case '^':
             case '$':
-                return 3;
+                return 6;
         }
         return -1;
     }
 
-    private static boolean isOperator(char ch) {
+    static boolean isOperator(char ch) {
         return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^' || ch == '$';
     }
 
